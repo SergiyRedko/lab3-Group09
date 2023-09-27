@@ -28,7 +28,7 @@ char* get_path(char* parsedInput){
   return path;
 }
 
-int get_num_args(char* parsedInput)
+int get_num_args(char* parsedInput);
 
 
 //Command to trim the input command to just be the first word

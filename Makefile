@@ -2,10 +2,10 @@
 all: shell.out test.out
 
 shell.out: shell.c parser.c
-	gcc -o $@ $^
+	gcc -g -o $@ $^
 
-test.out: test.c parser.c 
-	gcc -o $@ $^ 
+test.out: test.c parser.c qualifyPath.c
+	gcc -g -o $@ $^ 
 
 .PHONY: clean
 clean: 

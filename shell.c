@@ -10,7 +10,7 @@
 //To Do: This base file has been provided to help you start the lab, you'll need to heavily modify it to implement all of the features
 
 int main() {
-    char buffer[1024];
+    char buffer[BUFLEN];
     char* parsedinput;
     char* args[3];
     char newline;
