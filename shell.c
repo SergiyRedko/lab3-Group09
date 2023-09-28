@@ -4,6 +4,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "parser.h"
+#include "qualifyPath.h"
 
 #define BUFLEN 1024
 
@@ -15,7 +16,7 @@ int main() {
     char* args[3];
     char newline;
 
-    printf("Welcome to the Group09 shell! Enter commands, enter 'quit' to exit\n");
+    printf("--- Welcome to the Group09 shell! Enter commands, enter 'quit' to exit.\n--- Enter 'help' to get no help whatsoever.\n");
     do {
         //Print the terminal prompt and get input
         printf("$ ");
@@ -36,28 +37,33 @@ int main() {
         
         int number_of_arguments = get_args(parsedinput,arguments);
 
-        
-        char* path = get_path(parsedinput);
-
         //Sample shell logic implementation
-        if ( strcmp(parsedinput, "quit") == 0 ) {
-            printf("Bye!!\n");
+        if ( strcmp(parsedinput, "quit") == 0
+             || strcmp(parsedinput, "exit") == 0
+             || strcmp(parsedinput, "terminate") == 0 ) {
+            printf("I wish you best fortune in all your many endevours.\n");
             return 0;
         }
+        else if(strcmp(parsedinput, "help") == 0){
+            printf("As I said. You are on your own here.\n");
+        }
         else {
-            pid_t forkV = fork();
-            if ( forkV == 0 ) {
-                args[0] = path;
-                args[1] = NULL;
-                args[2] = NULL;
-                
-                if(execve(path, arguments, NULL) == -1)
-                {
-                    fprintf(stderr, "Error running command in execve\n");
-                    return -100;
-                }
-            } else
-                wait(NULL);
+            // Check if path leads to executable with run access.
+            if(qualifyPath(&(arguments[0])) == 1){
+                pid_t forkV = fork();
+                if ( forkV == 0 ) {
+                    
+                    if(execve(arguments[0], arguments, NULL) == -1)
+                    {
+                        fprintf(stderr, "Error running command in execve\n");
+                        return -100;
+                    }
+                } else
+                    wait(NULL);
+            }
+            else{
+                printf("This instruction could not be found or executed.\n");
+            }
         }
 
         //Remember to free any memory you allocate!
