@@ -30,6 +30,13 @@ int main() {
         parsedinput = (char*) malloc(BUFLEN * sizeof(char));
         size_t parselength = trimstring(parsedinput, input, BUFLEN);
 
+        
+        char* arguments[100] = {NULL};      //NOTE: The path must be the first argument of the arg array
+                                            // All strings are dynamically allocated and must be freed later 
+        
+        int number_of_arguments = get_args(parsedinput,arguments);
+
+        
         char* path = get_path(parsedinput);
 
         //Sample shell logic implementation
@@ -44,7 +51,7 @@ int main() {
                 args[1] = NULL;
                 args[2] = NULL;
                 
-                if(execve(path, args, NULL) == -1)
+                if(execve(path, arguments, NULL) == -1)
                 {
                     fprintf(stderr, "Error running command in execve\n");
                     return -100;
@@ -54,7 +61,13 @@ int main() {
         }
 
         //Remember to free any memory you allocate!
-        free(parsedinput);
+        
+        if(parsedinput != NULL)
+            free(parsedinput);
+        
+        for(int i = 0; i < number_of_arguments;i++){
+            free(arguments[i]);
+        }
     
     } while ( 1 );
 
