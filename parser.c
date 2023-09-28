@@ -21,6 +21,52 @@ size_t trimstring(char* outputbuffer, const char* inputbuffer, size_t bufferlen)
     return strlen(outputbuffer);
 }
 
+
+int get_args(char* parsedInput, char** arg_array){
+
+int length = strlen(parsedInput);
+char* token = NULL;
+int startOfToken = 0;
+int num_args = 0;
+
+//for(int i = 0;i < length;i++){  // Skips path
+//    if(parsedInput[i] == ' '){
+//        startOfToken = i+1;
+//        break;
+//    }
+//
+//}
+
+
+for(int i = 0; i <= length;i++){
+
+    if(parsedInput[i] == ' ' || parsedInput[i] == '\0'){
+    
+    int tokenLength = i - startOfToken;
+
+    token = (char*)malloc(tokenLength + 1);
+
+
+    if(token == NULL){
+        printf("Memory could not allocated for argument tokens");
+        exit(1);
+    }
+
+    strncpy(token,parsedInput + startOfToken,tokenLength);
+    token[tokenLength] = '\0';
+    arg_array[num_args] = token;
+    num_args++;
+
+    startOfToken = i + 1;
+    }
+
+
+}
+    return num_args;
+
+}
+
+
 char* get_path(char* parsedInput){
 
   char *path = strtok(parsedInput, " ");
@@ -28,7 +74,7 @@ char* get_path(char* parsedInput){
   return path;
 }
 
-int get_num_args(char* parsedInput);
+int get_num_args(char* parsedInput){}
 
 
 //Command to trim the input command to just be the first word
