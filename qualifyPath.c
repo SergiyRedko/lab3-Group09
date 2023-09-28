@@ -29,6 +29,7 @@ int qualifyPath(char** pathRef){
             perror("getcwd");
         }
 
+        strcat(qualifiedPath, "/");
         strcat(qualifiedPath, path);
 
         // Check that it exists, if yes, update the pathRef and return.
@@ -59,7 +60,7 @@ int qualifyPath(char** pathRef){
         }
 
         for(int i = 0; i < numPATHs; i++){
-            int fullPathLength = strlen(PATHs[i]) + strlen(path) + 2; // !!! SRD: Adjust for delimenter.
+            int fullPathLength = strlen(PATHs[i]) + strlen(path) + 2; // Adjust for delimenter.
             char* fullPath = (char*)malloc(fullPathLength);
             strcpy(fullPath, PATHs[i]);
             strcat(fullPath, "/");
