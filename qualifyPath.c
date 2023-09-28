@@ -34,7 +34,7 @@ int qualifyPath(char** pathRef){
 
         // Check that it exists, if yes, update the pathRef and return.
         if(access(qualifiedPath, X_OK) == 0){
-            // No need to free path, its a main's argument at this point.
+            free(*pathRef);
             *pathRef = qualifiedPath;
             return 1;
         }
@@ -48,12 +48,17 @@ int qualifyPath(char** pathRef){
         // Since we got here, we need to look through the PATHs.
 
         char* pathEnv = getenv("PATH");
+
+        // Copy pathEnv to heap so we don't mess it up with strtok()
+        char* heapedPathEnv = (char*)malloc(strlen(pathEnv));
+        strcpy(heapedPathEnv, pathEnv);
+
         char* delim = ":";
         char* token;
         char* PATHs[100];
 
         int numPATHs = 0;
-        token = strtok(pathEnv, delim);
+        token = strtok(heapedPathEnv, delim);
         while(token != NULL){
             PATHs[numPATHs++] = token;
             token = strtok(NULL, delim);
@@ -67,16 +72,17 @@ int qualifyPath(char** pathRef){
             strcat(fullPath, path);
 
             if(access(fullPath, X_OK) == 0){
-                // No need to free path, its a main's argument at this point.
+                free(*pathRef);
                 *pathRef = fullPath; // Update fully qualified path.
 
-                // No need to free pathEnv and PATHs, since they are not pointing to heap.
+                free(heapedPathEnv);
 
                 return 1;
             }           
         }
 
-        // No need to free pathEnv and PATHs, since they are not pointing to heap.
+        free(heapedPathEnv);
+
         return 0;
     }
 }

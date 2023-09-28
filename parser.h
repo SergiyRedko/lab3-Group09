@@ -17,6 +17,5 @@ bool runinbackground(const char* inputbuffer, size_t bufferlen);
 
 
 int get_args(char* parsedInput, char** arg_array);
-char* get_path(char* parsedInput);
 
 #endif
