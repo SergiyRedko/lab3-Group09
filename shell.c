@@ -19,7 +19,15 @@ int main() {
     printf("--- Welcome to the Group09 shell! Enter commands, enter 'quit' to exit.\n--- Enter 'help' to get no help whatsoever.\n");
     do {
         //Print the terminal prompt and get input
-        printf("$ ");
+        char* currentWorkingDirectory = (char*)malloc(500);
+        if (getcwd(currentWorkingDirectory, 500) == NULL) {
+            perror("getcwd");
+        }
+
+        printf("%s$ ", currentWorkingDirectory);
+        free(currentWorkingDirectory);
+
+
         char *input = fgets(buffer, sizeof(buffer), stdin);
         if(!input)
         {
