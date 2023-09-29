@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "string.h"
 
+#define BUFFER_LENGTH 1024
+
 int qualifyPath(char** pathRef){
     if(pathRef == 0)
         return 0;
@@ -22,10 +24,8 @@ int qualifyPath(char** pathRef){
     }
     else if(containsSlash(path)){
         // Run from working dir + path.
-        size_t size = 300;
-
-        char* qualifiedPath = (char*)malloc(size);
-        if (getcwd(qualifiedPath, size) == NULL) {
+        char* qualifiedPath = (char*)malloc((size_t)BUFFER_LENGTH);
+        if (getcwd(qualifiedPath, BUFFER_LENGTH) == NULL) {
             perror("getcwd");
         }
 
@@ -38,11 +38,10 @@ int qualifyPath(char** pathRef){
             *pathRef = qualifiedPath;
             return 1;
         }
-        else
+        else{
+            free(qualifiedPath);
             return 0;
-
-        // SRD: Implement "../"
-
+        }
     }
     else{
         // Since we got here, we need to look through the PATHs.
