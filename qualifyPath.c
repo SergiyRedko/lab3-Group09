@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "string.h"
 
+#define BUFFER_LENGTH 1024
+
 int qualifyPath(char** pathRef){
     if(pathRef == 0)
         return 0;
@@ -22,10 +24,8 @@ int qualifyPath(char** pathRef){
     }
     else if(containsSlash(path)){
         // Run from working dir + path.
-        size_t size = 300;
-
-        char* qualifiedPath = (char*)malloc(size);
-        if (getcwd(qualifiedPath, size) == NULL) {
+        char* qualifiedPath = (char*)malloc((size_t)BUFFER_LENGTH);
+        if (getcwd(qualifiedPath, BUFFER_LENGTH) == NULL) {
             perror("getcwd");
         }
 
@@ -38,18 +38,17 @@ int qualifyPath(char** pathRef){
             *pathRef = qualifiedPath;
             return 1;
         }
-        else
+        else{
+            free(qualifiedPath);
             return 0;
-
-        // SRD: Implement "../"
-
+        }
     }
     else{
         // Since we got here, we need to look through the PATHs.
 
         char* pathEnv = getenv("PATH");
 
-        // Copy pathEnv to heap so we don't mess it up with strtok()
+        // Copy pathEnv to heap so we don't mess it up with strtok().
         char* heapedPathEnv = (char*)malloc(strlen(pathEnv));
         strcpy(heapedPathEnv, pathEnv);
 
@@ -57,6 +56,7 @@ int qualifyPath(char** pathRef){
         char* token;
         char* PATHs[100];
 
+        // Break up the PATHs into an array of individual paths.
         int numPATHs = 0;
         token = strtok(heapedPathEnv, delim);
         while(token != NULL){
@@ -64,6 +64,7 @@ int qualifyPath(char** pathRef){
             token = strtok(NULL, delim);
         }
 
+        // Check each path for validity. Bail of the first valid path.
         for(int i = 0; i < numPATHs; i++){
             int fullPathLength = strlen(PATHs[i]) + strlen(path) + 2; // Adjust for delimenter.
             char* fullPath = (char*)malloc(fullPathLength);
@@ -81,6 +82,7 @@ int qualifyPath(char** pathRef){
             }           
         }
 
+        // If we got here, there are no valid paths.
         free(heapedPathEnv);
 
         return 0;
