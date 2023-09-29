@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include "parser.h"
 #include "qualifyPath.h"
+#include "piping.h"
 
 #define BUFLEN 1024
 
@@ -29,14 +30,20 @@ int main() {
         
         //Clean and parse the input string
         parsedinput = (char*) malloc(BUFLEN * sizeof(char));
-        size_t parselength = trimstring(parsedinput, input, BUFLEN);
-
+        size_t parselength = trimstring(parsedinput, input, BUFLEN); 
         
         char* arguments[100] = {NULL};      //NOTE: The path must be the first argument of the arg array
                                             // All strings are dynamically allocated and must be freed later 
         
         int number_of_arguments = get_args(parsedinput,arguments);
 
+
+        if(pipe_check(arguments,number_of_arguments)){      // Enter if we need to pipe commands
+
+        create_pipe(arguments,number_of_arguments);
+
+        }
+        else{
         //Sample shell logic implementation
         if ( strcmp(parsedinput, "quit") == 0
              || strcmp(parsedinput, "exit") == 0
@@ -65,14 +72,14 @@ int main() {
                 printf("This instruction could not be found or executed.\n");
             }
         }
-
+        }
         //Remember to free any memory you allocate!
         
         if(parsedinput != NULL)
             free(parsedinput);
         
         for(int i = 0; i < number_of_arguments;i++){
-            free(arguments[i]);
+            //free(arguments[i]);
         }
     
     } while ( 1 );

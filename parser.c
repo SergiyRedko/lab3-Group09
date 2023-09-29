@@ -29,36 +29,28 @@ int get_args(char* parsedInput, char** arg_array){
     int startOfToken = 0;
     int num_args = 0;
 
-    //for(int i = 0;i < length;i++){  // Skips path
-    //    if(parsedInput[i] == ' '){
-    //        startOfToken = i+1;
-    //        break;
-    //    }
-    //
-    //}
 
+    for(int i = 0; i <= length;i++){        // We iterate by character through our input
 
-    for(int i = 0; i <= length;i++){
-
-        if(parsedInput[i] == ' ' || parsedInput[i] == '\0'){
+        if(parsedInput[i] == ' ' || parsedInput[i] == '\0'){    // Only entered if we have reached end of an argument or end of input
         
-        int tokenLength = i - startOfToken;
+            int tokenLength = i - startOfToken;         // Length of token is how many char we move through since last token
 
-        token = (char*)malloc(tokenLength + 1);
+            token = (char*)malloc(tokenLength + 1);
 
 
-        if(token == NULL){
-            printf("Memory could not allocated for argument tokens");
-            exit(1);
-        }
+            if(token == NULL){
+                printf("Memory could not allocated for argument tokens");
+                exit(1);
+            }
 
-        strncpy(token,parsedInput + startOfToken,tokenLength);
-        token[tokenLength] = '\0';
-        arg_array[num_args] = token;
-        num_args++;
+            strncpy(token,parsedInput + startOfToken,tokenLength);  // Copy token onto heap
+            token[tokenLength] = '\0';
+            arg_array[num_args] = token;                            // Add token to argument array
+            num_args++;
 
-        startOfToken = i + 1;
-        }
+            startOfToken = i + 1;                                   // Set new start of token to next character
+            }
 
 
     }
