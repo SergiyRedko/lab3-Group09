@@ -98,7 +98,6 @@ int main() {
                         waitpid(forkV, &status, 0);
                     }
                 }
-                    
             }
             else{
                 printf("This instruction could not be found or executed.\n");
