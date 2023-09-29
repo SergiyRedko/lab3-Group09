@@ -74,13 +74,6 @@ int main()
 
         int number_of_arguments = get_args(parsedinput, arguments);
 
-        if (pipe_check(arguments, number_of_arguments))
-        { // Enter if we need to pipe commands
-
-            create_pipe(arguments, number_of_arguments);
-        }
-        else
-        {
             // Sample shell logic implementation
             if (strcmp(parsedinput, "quit") == 0 || strcmp(parsedinput, "exit") == 0 || strcmp(parsedinput, "terminate") == 0)
             {
@@ -91,6 +84,12 @@ int main()
             {
                 printf("As we said. You are on your own here.\n");
             }
+        else if (pipe_check(arguments, number_of_arguments))
+        { // Enter if we need to pipe commands
+
+            create_pipe(arguments, number_of_arguments);
+        }
+
             else
             {
                 // Check if path leads to executable with run access.
@@ -122,7 +121,7 @@ int main()
                     printf("This instruction could not be found or executed.\n");
                 }
             }
-        }
+        
         // Free the used memory.
 
         if (parsedinput != NULL)
